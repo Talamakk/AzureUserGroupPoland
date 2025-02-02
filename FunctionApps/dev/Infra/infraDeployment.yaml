@@ -1,0 +1,58 @@
+
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  Environment: 'dev' # qa, prd
+  Prefix: 'bdAug2025'
+  Location: 'germanywestcentral' # westeurope, eastus, polandcentral
+  LocationShort: 'gwc' # we, eus, pl
+  ServiceConnection: '...'
+
+
+stages:
+  - stage: 'rgDeployment'
+    displayName: 'Resource group deployment'
+    jobs:
+      - job: 'rgDeployment'
+        displayName: 'Resource group deployment'
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy RG bicep file'
+            inputs:
+              deploymentScope: 'Subscription'
+              azureResourceManagerConnection: '$(ServiceConnection)'
+              location: '$(Location)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/$(Environment)/Infra/main-rg.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/$(Environment)/Infra/main-rg.bicepparam'
+              overrideParameters: |
+                -environment $(Environment)
+                -location $(Location)
+                -locationShort $(LocationShort)
+                -prefix $(Prefix)
+              deploymentMode: 'Incremental'
+      # - deployment: 'DeployInfra'
+      #   displayName: 'Deploy infrastructure'
+      #   dependsOn: DeployRGs
+      #   environment: dev
+      #   strategy:
+      #     runOnce:
+      #       deploy:
+      #         steps:
+      #         - checkout: self
+      #         - task: AzureResourceManagerTemplateDeployment@3
+      #           displayName: 'Deploy Infrastructure'
+      #           inputs:
+      #             deploymentScope: 'Resource Group'
+      #             resourceGroupName: $(ResourceGroupName)
+      #             azureResourceManagerConnection: '$(ServiceConnection)'
+      #             location: '$(Location)'
+      #             templateLocation: 'Linked artifact'
+      #             csmFile: '$(System.DefaultWorkingDirectory)/main.bicep'
+      #             csmParametersFile: '$(System.DefaultWorkingDirectory)/$(Environment)/main-$(Environment).bicepparam'
+      #             overrideParameters: '-resourceGroupName $(ResourceGroupName) -location $(Location)'
+      #             deploymentMode: 'Incremental'
