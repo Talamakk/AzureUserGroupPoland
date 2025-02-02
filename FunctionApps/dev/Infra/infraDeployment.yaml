@@ -1,4 +1,3 @@
-
 trigger: none
 
 pool:
@@ -9,7 +8,7 @@ variables:
   Prefix: 'bdAug2025'
   Location: 'germanywestcentral' # westeurope, eastus, polandcentral
   LocationShort: 'gwc' # we, eus, pl
-  ServiceConnection: '...'
+  ServiceConnection: 'scon-bd-sandbox'
 
 
 stages:
@@ -27,8 +26,8 @@ stages:
               azureResourceManagerConnection: '$(ServiceConnection)'
               location: '$(Location)'
               templateLocation: 'Linked artifact'
-              csmFile: '$(System.DefaultWorkingDirectory)/$(Environment)/Infra/main-rg.bicep'
-              csmParametersFile: '$(System.DefaultWorkingDirectory)/$(Environment)/Infra/main-rg.bicepparam'
+              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
               overrideParameters: |
                 -environment $(Environment)
                 -location $(Location)
