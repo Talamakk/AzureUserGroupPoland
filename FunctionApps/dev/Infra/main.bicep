@@ -36,6 +36,9 @@ module serverfarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
   name: '${uniqueString(deployment().name, location)}-ASP-01'
   params: {
     name: 'asp-${prefix}-${locationShort}-${environment}'
+    location: location
+    kind: 'linux'
+    skuName: 'P1v3'
   }
 }
 
