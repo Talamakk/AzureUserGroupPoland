@@ -32,7 +32,7 @@ param locationShort string
 param prefix string
 
 // ******* App Service Plan ******* //
-module serverfarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
+module serverFarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
   name: '${uniqueString(deployment().name, location)}-ASP-01'
   params: {
     name: 'asp-${prefix}-${locationShort}-${environment}'
@@ -42,17 +42,13 @@ module serverfarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
   }
 }
 
-
-
-
-
-
-// module site 'br/public:avm/res/web/site:<version>' = {
-//   name: 'siteDeployment'
-//   params: {
-//     // Required parameters
-//     kind: 'functionapp'
-//     name: 'wsfamin001'
-//     serverFarmResourceId: '<serverFarmResourceId>'
-//   }
-// }
+// ******* Function App ******* //
+module site 'br/public:avm/res/web/site:0.13.2' = {
+  name: '${uniqueString(deployment().name, location)}-FNC-01'
+  params: {
+    // Required parameters
+    kind: 'functionapp'
+    name: 'fn-${prefix}-${locationShort}-${environment}'
+    serverFarmResourceId: serverFarm.outputs.resourceId
+  }
+}
