@@ -46,7 +46,7 @@ module serverFarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
 module storageAccount 'br/public:avm/res/storage/storage-account:0.17.0' = {
   name: '${uniqueString(deployment().name, location)}-SA-01'
   params: {
-    name: 'sa${prefix}${locationShort}${environment}'
+    name: toLower(replace('sa-${prefix}-${locationShort}-${environment}', '-', ''))
     location: location
     kind: 'BlobStorage'
     skuName: 'Standard_LRS'
