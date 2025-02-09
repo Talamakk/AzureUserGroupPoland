@@ -63,9 +63,12 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     serverFarmResourceId: serverFarm.outputs.resourceId
     storageAccountResourceId: storageAccount.outputs.resourceId
     appSettingsKeyValuePairs: {
-      'FUNCTIONS_WORKER_RUNTIME': 'python'
-      'FUNCTIONS_EXTENSION_VERSION': '~4'
+      // 'FUNCTIONS_WORKER_RUNTIME': 'python'
+      // 'FUNCTIONS_EXTENSION_VERSION': '~4'
       'ENABLE_ORYX_BUILD': 'true'
+    }
+    siteConfig: {
+      linuxFxVersion: 'Python|3.9'
     }
   }
 }
