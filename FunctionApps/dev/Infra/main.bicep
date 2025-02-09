@@ -64,8 +64,7 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     storageAccountResourceId: storageAccount.outputs.resourceId
     appSettingsKeyValuePairs: {
       'FUNCTIONS_WORKER_RUNTIME': 'python'
-      'WEBSITE_RUNTIME_STACK': 'python'
-      'PYTHON_VERSION': '3.9'
+      'FUNCTIONS_EXTENSION_VERSION': '~4'
       'ENABLE_ORYX_BUILD': 'true'
     }
   }
