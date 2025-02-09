@@ -58,7 +58,7 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
   name: '${uniqueString(deployment().name, location)}-FN-01'
   params: {
     // Required parameters
-    kind: 'functionapp'
+    kind: 'functionapp,linux'
     name: 'fn-${prefix}-${locationShort}-${environment}'
     serverFarmResourceId: serverFarm.outputs.resourceId
     storageAccountResourceId: storageAccount.outputs.resourceId
