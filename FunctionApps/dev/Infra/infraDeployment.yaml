@@ -27,11 +27,7 @@ stages:
               templateLocation: 'Linked artifact'
               csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicep'
               csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
-              overrideParameters: |
-                -environment $(Environment)
-                -location $(Location)
-                -locationShort $(LocationShort)
-                -prefix $(Prefix)
+              overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
               deploymentMode: 'Incremental'
       # - deployment: 'DeployInfra'
       #   displayName: 'Deploy infrastructure'
