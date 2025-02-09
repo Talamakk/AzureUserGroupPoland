@@ -42,13 +42,25 @@ module serverFarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
   }
 }
 
+// ******* Storage Account ******* //
+module storageAccount 'br/public:avm/res/storage/storage-account:0.17.0' = {
+  name: '${uniqueString(deployment().name, location)}-SA-01'
+  params: {
+    name: 'sa${prefix}${locationShort}${environment}'
+    location: location
+    kind: 'BlobStorage'
+    skuName: 'Standard_LRS'
+  }
+}
+
 // ******* Function App ******* //
 module site 'br/public:avm/res/web/site:0.13.2' = {
-  name: '${uniqueString(deployment().name, location)}-FNC-01'
+  name: '${uniqueString(deployment().name, location)}-FN-01'
   params: {
     // Required parameters
     kind: 'functionapp'
     name: 'fn-${prefix}-${locationShort}-${environment}'
     serverFarmResourceId: serverFarm.outputs.resourceId
+    storageAccountResourceId: storageAccount.outputs.resourceId
   }
 }
