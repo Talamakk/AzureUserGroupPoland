@@ -68,6 +68,8 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
       'ENABLE_ORYX_BUILD': 'true'
     }
     siteConfig: {
+      alwaysOn: true
+      use32BitWorkerProcess: false
       linuxFxVersion: 'Python|3.9'
     }
   }
