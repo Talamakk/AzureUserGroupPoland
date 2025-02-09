@@ -29,24 +29,23 @@ stages:
               csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
               overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
               deploymentMode: 'Incremental'
-      # - deployment: 'DeployInfra'
-      #   displayName: 'Deploy infrastructure'
-      #   dependsOn: DeployRGs
-      #   environment: dev
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         steps:
-      #         - checkout: self
-      #         - task: AzureResourceManagerTemplateDeployment@3
-      #           displayName: 'Deploy Infrastructure'
-      #           inputs:
-      #             deploymentScope: 'Resource Group'
-      #             resourceGroupName: $(ResourceGroupName)
-      #             azureResourceManagerConnection: '$(ServiceConnection)'
-      #             location: '$(Location)'
-      #             templateLocation: 'Linked artifact'
-      #             csmFile: '$(System.DefaultWorkingDirectory)/main.bicep'
-      #             csmParametersFile: '$(System.DefaultWorkingDirectory)/$(Environment)/main-$(Environment).bicepparam'
-      #             overrideParameters: '-resourceGroupName $(ResourceGroupName) -location $(Location)'
-      #             deploymentMode: 'Incremental'
+  - stage: 'resourcesDeployment'
+    displayName: 'Resources deployment'
+    dependsOn: rgDeployment
+    jobs:
+      - job: 'resourcesDeployment'
+        displayName: 'Resources deployment'
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy resources bicep file'
+            inputs:
+              deploymentScope: 'Resource Group'
+              resourceGroupName: 'rg-$(Prefix)-$(LocationShort)-$(Environment)'
+              azureResourceManagerConnection: '$(ServiceConnection)'
+              location: '$(Location)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicepparam'
+              overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
+              deploymentMode: 'Incremental'
