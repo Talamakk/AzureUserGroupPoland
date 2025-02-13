@@ -8,7 +8,7 @@ variables:
   FunctionApp: 'fn-bdAug2025-gwc-dev'
 
 stages:
-- stage: Build_Deploy
+- stage: differentStageName
   jobs:
   - job: Build
     steps:
@@ -20,8 +20,7 @@ stages:
 
     - script: |
         python -m pip install --upgrade pip
-        pip install -r $(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/requirements.txt \
-        --target=$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/.python_packages/lib/site-packages
+        pip install -r $(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/requirements.txt --target=$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/.python_packages/lib/site-packages
       displayName: 'Install dependencies'
 
     - task: ArchiveFiles@2
