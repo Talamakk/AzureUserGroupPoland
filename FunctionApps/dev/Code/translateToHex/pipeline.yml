@@ -20,7 +20,8 @@ stages:
 
     - script: |
         python -m pip install --upgrade pip
-        pip install -r $(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/requirements.txt --target=$(Build.SourcesDirectory)/translateToHex/.python_packages/lib/site-packages
+        pip install -r $(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/requirements.txt \
+        --target=$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/.python_packages/lib/site-packages
       displayName: 'Install dependencies'
 
     - task: ArchiveFiles@2
@@ -40,5 +41,5 @@ stages:
         appType: 'functionAppLinux'
         appName: $(FunctionApp)
         package: '$(Build.ArtifactStagingDirectory)/pythonFunction.zip'
-        appSettings: '-CONNECTION_STRING test'
+        appSettings: '-CONNECTION_STRING none'
       displayName: 'Deploy to Azure Function App'
