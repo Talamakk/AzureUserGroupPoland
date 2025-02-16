@@ -5,7 +5,7 @@ import json  # Required for JSON request parsing
 # Initialize the function app instance
 app = func.FunctionApp()
 
-@app.function_name(name="HttpTrigger1")
+@app.function_name(name="translateToHex")
 @app.route(route="hello", auth_level=func.AuthLevel.ANONYMOUS)  # Public API endpoint
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
@@ -68,3 +68,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 #         )
 #     else:
 #         return create_error_response("Input string parameter is missing in the query string or request body", 400)
+
