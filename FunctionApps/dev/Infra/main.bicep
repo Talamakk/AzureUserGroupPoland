@@ -70,7 +70,7 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     siteConfig: {
       alwaysOn: true
       use32BitWorkerProcess: false
-      linuxFxVersion: 'Python|3.9'
+      linuxFxVersion: 'Python|3.11'
     }
   }
 }

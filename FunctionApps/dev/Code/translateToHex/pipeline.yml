@@ -20,8 +20,8 @@ stages:
         addToPath: true
 
     - script: |
-        # python -m pip install --upgrade pip
-        # pip install -r $(FunctionPath)/requirements.txt
+        python -m pip install --upgrade pip
+        pip install -r $(FunctionPath)/requirements.txt --target=$(FunctionPath)/.python_packages/lib/site-packages
       displayName: 'Install dependencies'
 
     - task: ArchiveFiles@2
@@ -42,4 +42,4 @@ stages:
         appType: 'functionAppLinux'
         appName: $(FunctionApp)
         package: '$(Build.ArtifactStagingDirectory)/pythonFunction.zip'
-        appSettings: '-ENABLE_ORYX_BUILD true -SCM_DO_BUILD_DURING_DEPLOYMENT true -WEBSITE_RUN_FROM_PACKAGE 0'
+        appSettings: '-KEY testValue'
