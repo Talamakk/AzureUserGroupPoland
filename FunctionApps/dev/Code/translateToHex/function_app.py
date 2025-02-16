@@ -1,3 +1,32 @@
+import azure.functions as func
+import logging
+import json  # Required for JSON request parsing
+
+# Initialize the function app instance
+app = func.FunctionApp()
+
+@app.function_name(name="HttpTrigger1")
+@app.route(route="hello", auth_level=func.AuthLevel.ANONYMOUS)  # Public API endpoint
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info("Python HTTP trigger function processed a request.")
+
+    name = req.params.get("name")
+    if not name:
+        try:
+            req_body = req.get_json()
+            name = req_body.get("name")
+        except (ValueError, TypeError):
+            name = None
+
+    if name:
+        return func.HttpResponse(f"Hello, {name}!", status_code=200)
+    else:
+        return func.HttpResponse(
+            "Please pass a name on the query string or in the request body",
+            status_code=400,
+        )
+
+
 # import logging
 # import json
 # import azure.functions as func
@@ -39,13 +68,3 @@
 #         )
 #     else:
 #         return create_error_response("Input string parameter is missing in the query string or request body", 400)
-
-import azure.functions as func
-
-app = func.FunctionApp()
-
-@app.function_name(name="HttpTrigger1")
-@app.route(route="req")
-def main(req: func.HttpRequest) -> str:
-    user = req.params.get("user")
-    return f"Hello, {user}!"

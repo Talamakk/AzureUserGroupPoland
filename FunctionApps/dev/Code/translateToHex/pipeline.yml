@@ -6,9 +6,10 @@ pool:
 variables:
   ServiceConnection: 'scon-HQsandbox'
   FunctionApp: 'fn-bdAug2025-gwc-dev'
+  FunctionPath: '$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex'
 
 stages:
-- stage: differentStageName
+- stage: Build_Deploy
   jobs:
   - job: Build
     steps:
@@ -20,25 +21,25 @@ stages:
 
     - script: |
         python -m pip install --upgrade pip
-        pip install -r $(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/requirements.txt --target=$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex/.python_packages/lib/site-packages
+        pip install -r $(FunctionPath)/requirements.txt
       displayName: 'Install dependencies'
 
     - task: ArchiveFiles@2
+      displayName: 'Archive function files'
       inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex'
+        rootFolderOrFile: '$(FunctionPath)'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/pythonFunction.zip'
         replaceExistingArchive: true
         verbose: true
-        includeContent: '**/.python_packages/**'
-      displayName: 'Archive function files'
+        includeContent: '**/*'
 
     - task: AzureFunctionApp@2
+      displayName: 'Deploy to Azure Function App'
       inputs:
         azureSubscription: $(ServiceConnection)
         appType: 'functionAppLinux'
         appName: $(FunctionApp)
         package: '$(Build.ArtifactStagingDirectory)/pythonFunction.zip'
-        appSettings: '-CONNECTION_STRING none'
-      displayName: 'Deploy to Azure Function App'
+        appSettings: '-CONNECTION_STRING testValue'
