@@ -33,7 +33,7 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/pythonFunction.zip'
         replaceExistingArchive: true
         verbose: true
-        includeContent: '**/*'
+        includeContent: '**/**'
 
     - task: AzureFunctionApp@2
       displayName: 'Deploy to Azure Function App'
