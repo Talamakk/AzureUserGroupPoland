@@ -20,8 +20,8 @@ stages:
         addToPath: true
 
     - script: |
-        # python -m pip install --upgrade pip
-        # pip install -r $(FunctionPath)/requirements.txt --target=$(FunctionPath)/.python_packages/lib/site-packages
+        python -m pip install --upgrade pip
+        pip install -r $(FunctionPath)/requirements.txt --target=$(FunctionPath)/.python_packages/lib/site-packages
       displayName: 'Install dependencies'
 
     - task: ArchiveFiles@2

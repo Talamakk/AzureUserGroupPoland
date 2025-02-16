@@ -69,9 +69,8 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     appSettingsKeyValuePairs: {
       'FUNCTIONS_WORKER_RUNTIME': 'python'
       'FUNCTIONS_EXTENSION_VERSION': '~4'
-      // Useful when using Oryx build:
-      // 'ENABLE_ORYX_BUILD': 'true'
-      // 'SCM_DO_BUILD_DURING_DEPLOYMENT': 'true'
+      'ENABLE_ORYX_BUILD': 'true'
+      'SCM_DO_BUILD_DURING_DEPLOYMENT': 'true'
     }
     siteConfig: {
       alwaysOn: true
