@@ -50,6 +50,10 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.17.0' = {
     location: location
     kind: 'BlobStorage'
     skuName: 'Standard_LRS'
+    networkAcls: {
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'
+    }
   }
 }
 
