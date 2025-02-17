@@ -66,6 +66,8 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     serverFarmResourceId: serverFarm.outputs.resourceId
     storageAccountResourceId: storageAccount.outputs.resourceId
     appSettingsKeyValuePairs: {
+      'FUNCTIONS_WORKER_RUNTIME': 'python'
+      'FUNCTIONS_EXTENSION_VERSION': '~4'
       // Neded in case of using Oryx build:
       // 'ENABLE_ORYX_BUILD': 'true'
       // 'SCM_DO_BUILD_DURING_DEPLOYMENT': 'true'
