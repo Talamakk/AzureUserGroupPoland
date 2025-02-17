@@ -50,10 +50,7 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.17.0' = {
     location: location
     kind: 'BlobStorage'
     skuName: 'Standard_LRS'
-    networkAcls: {
-      defaultAction: 'Deny'
-      bypass: 'AzureServices'
-    }
+    publicNetworkAccess: 'Enabled'
   }
 }
 
@@ -69,8 +66,9 @@ module site 'br/public:avm/res/web/site:0.13.2' = {
     appSettingsKeyValuePairs: {
       'FUNCTIONS_WORKER_RUNTIME': 'python'
       'FUNCTIONS_EXTENSION_VERSION': '~4'
-      'ENABLE_ORYX_BUILD': 'true'
-      'SCM_DO_BUILD_DURING_DEPLOYMENT': 'true'
+      // needed for Oryx build:
+      // 'ENABLE_ORYX_BUILD': 'true'
+      // 'SCM_DO_BUILD_DURING_DEPLOYMENT': 'true'
     }
     siteConfig: {
       alwaysOn: true
