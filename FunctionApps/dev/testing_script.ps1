@@ -55,3 +55,52 @@ Invoke-RestMethod -Uri "https://fn-bdaug2025-gwc-dev.azurewebsites.net/admin/fun
 ...
 # Delete a function key
 ...
+#another admin custom-made function
+
+
+### Testing whiteslisting approach ###
+$subscriptionId = ""
+$resourceGroupName = "rg-bdAug2025-gwc-dev"
+$functionAppName = "fn-bdAug2025-gwc-dev"
+
+$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$payload = @{
+    name = "Bartek"
+}
+
+# Disconnect-AzAccount
+# Connect-AzAccount
+
+$currentIp = (Invoke-RestMethod -Uri "https://api.ipify.org?format=json").ip
+
+$functionApp = Get-AzWebApp -ResourceGroupName $resourceGroupName -Name $functionAppName
+$existingIpRestrictions = $functionApp.SiteConfig.IpSecurityRestrictions
+
+$newIpRule = New-Object Microsoft.Azure.Management.WebSites.Models.IpSecurityRestriction
+$newIpRule.IpAddress = "$currentIp/32"
+$newIpRule.Action = "Allow"
+$newIpRule.Tag = "Default"
+$newIpRule.Priority = 101
+$newIpRule.Name = "TemporaryWhitelist"
+
+# Append the new IP rule to the existing IP restrictions
+$updatedIpRestrictions = $existingIpRestrictions + $newIpRule
+
+# Convert the array to a list of IpSecurityRestriction objects
+$ipSecurityRestrictionsList = [System.Collections.Generic.List[Microsoft.Azure.Management.WebSites.Models.IpSecurityRestriction]]::new()
+$updatedIpRestrictions | ForEach-Object { $ipSecurityRestrictionsList.Add($_) }
+
+# Set the IP security restrictions
+$functionApp.SiteConfig.IpSecurityRestrictions = $ipSecurityRestrictionsList
+
+# Apply the updated configuration to the Function App
+Set-AzWebApp -WebApp $functionApp
+Write-Output "Added $publicIp to the whitelist."
+
+
+Call-FunctionApp -apiUrl $apiUrl -payload $payload
+
+# Remove the temporary IP rule
+$functionApp.SiteConfig.IpSecurityRestrictions= $existingIpRestrictions
+Set-AzWebApp -WebApp $functionApp
+Write-Output "Removed $currentIp from the whitelist."
