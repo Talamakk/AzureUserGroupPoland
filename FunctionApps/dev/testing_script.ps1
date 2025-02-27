@@ -97,10 +97,39 @@ $functionApp.SiteConfig.IpSecurityRestrictions = $ipSecurityRestrictionsList
 Set-AzWebApp -WebApp $functionApp
 Write-Output "Added $publicIp to the whitelist."
 
-
 Call-FunctionApp -apiUrl $apiUrl -payload $payload
 
 # Remove the temporary IP rule
 $functionApp.SiteConfig.IpSecurityRestrictions= $existingIpRestrictions
 Set-AzWebApp -WebApp $functionApp
 Write-Output "Removed $currentIp from the whitelist."
+
+### Testing EntraID authentication ###
+
+# Call publicly exposed function - should get 401
+$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$payload = @{
+    name = "Bartek"
+}
+Call-FunctionApp -apiUrl $apiUrl -payload $payload
+
+$tenantId = ""  # Your Azure AD Tenant ID
+$clientId = ""  # The Client App Registration ID (FunctionApp-Caller)
+$clientSecret = ""  # Secret from "Certificates & Secrets"
+
+# Login to Azure as the client app
+$secureSecret = ConvertTo-SecureString $clientSecret -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
+Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant $tenantId | Out-Null
+
+# Get the access token
+$functionClientId = ""
+$token = (Get-AzAccessToken -ResourceUrl "api://$($functionClientId)").Token
+
+$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$payload = @{
+    name = "Bartek"
+}
+$headers = @{ Authorization = "Bearer $token" }
+$response = Invoke-RestMethod -Uri $apiUrl -Method Post -Body ($payload | ConvertTo-Json) -Headers $headers -ContentType "application/json"
+Write-Output $response
