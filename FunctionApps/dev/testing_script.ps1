@@ -1,3 +1,7 @@
+# fn-bdAug2025-gwc-dev: function with Easy Auth
+# fn-bdAug2025-2-gwc-dev: function without Easy Auth
+
+
 # Define a function to call the Function App
 function Call-FunctionApp {
     param (
@@ -11,25 +15,23 @@ function Call-FunctionApp {
 }
 
 # Call publicly exposed function
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
 Call-FunctionApp -apiUrl $apiUrl -payload $payload
 
-# Call secure function (using function key)
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api//secure_function?"
+# Call secure function (using function/host key)
+$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/secure_function?"
 $functionKey = ""
-$hostKey = ""
 $payload = @{
     name = "Bartek"
 }
 Call-FunctionApp -apiUrl "${apiUrl}code=${functionKey}" -payload $payload
 
-# Call secure function (using host key)
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api//secure_function2?"
+# Call secure function (using function/host key)
+$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/secure_function2?"
 $functionKey = ""
-$hostKey = ""
 $payload = @{
     name = "Bartek"
 }
@@ -38,24 +40,24 @@ Call-FunctionApp -apiUrl "${apiUrl}code=${functionKey}" -payload $payload
 ### Testing master key ###
 $masterKey = ""
 # Get host status
-Invoke-RestMethod -Uri "https://fn-bdaug2025-gwc-dev.azurewebsites.net/admin/host/status" `
+Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/host/status" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
 # List all functions
-Invoke-RestMethod -Uri "https://fn-bdaug2025-gwc-dev.azurewebsites.net/admin/functions" `
+Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/functions" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
 # List all function keys
-Invoke-RestMethod -Uri "https://fn-bdaug2025-gwc-dev.azurewebsites.net/admin/functions/secure_function/keys" `
+Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/functions/secure_function/keys" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
 # Create a new function key
-...
+# ...
 # Delete a function key
-...
+# ...
 #another admin custom-made function
 
 
