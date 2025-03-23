@@ -1,3 +1,4 @@
+# Define a function to call the Function App
 function Call-FunctionApp {
     param (
         [string]$apiUrl,

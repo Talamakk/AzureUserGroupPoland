@@ -5,7 +5,7 @@ pool:
 
 variables:
   Environment: 'dev' # qa, prd
-  Prefix: 'bdAug2025'
+  Prefix: 'bdAug2025-2'
   Location: 'germanywestcentral' # westeurope, eastus, polandcentral
   LocationShort: 'gwc' # we, eus, pl
   ServiceConnection: 'scon-HQsandbox'
