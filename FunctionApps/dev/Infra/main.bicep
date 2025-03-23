@@ -28,7 +28,7 @@ param locationShort string
 
 @description('Required - project prefix')
 @minLength(3)
-@maxLength(10)
+@maxLength(15)
 param prefix string
 
 // ******* App Service Plan ******* //
