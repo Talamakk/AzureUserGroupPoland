@@ -1,6 +1,5 @@
 # fn-bdAug2025-gwc-dev: function with Easy Auth
-# fn-bdAug2025-2-gwc-dev: function without Easy Auth
-
+# fn-bdAug2025-2-gwc-dev: function with Easy Auth
 
 # Define a function to call the Function App
 function Call-FunctionApp {
@@ -11,7 +10,6 @@ function Call-FunctionApp {
 
     $response = Invoke-RestMethod -Uri $apiUrl -Method Post -Body ($payload | ConvertTo-Json) -ContentType "application/json"
     Write-Output $response
-    # return $response
 }
 
 # Call publicly exposed function
@@ -63,16 +61,12 @@ Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/f
 
 ### Testing whiteslisting approach ###
 $subscriptionId = ""
-$resourceGroupName = "rg-bdAug2025-gwc-dev"
-$functionAppName = "fn-bdAug2025-gwc-dev"
-
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
-$payload = @{
-    name = "Bartek"
-}
+$resourceGroupName = "rg-bdAug2025-2-gwc-dev"
+$functionAppName = "fn-bdAug2025-2-gwc-dev"
 
 # Disconnect-AzAccount
-# Connect-AzAccount
+# Connect-AzAccount -TenantId ""
+# Set-AzContext -SubscriptionId $subscriptionId
 
 $currentIp = (Invoke-RestMethod -Uri "https://api.ipify.org?format=json").ip
 
@@ -98,8 +92,13 @@ $functionApp.SiteConfig.IpSecurityRestrictions = $ipSecurityRestrictionsList
 
 # Apply the updated configuration to the Function App
 Set-AzWebApp -WebApp $functionApp
-Write-Output "Added $publicIp to the whitelist."
+Write-Output "Added $currentIp to the whitelist."
 
+
+$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
+$payload = @{
+    name = "Bartek"
+}
 Call-FunctionApp -apiUrl $apiUrl -payload $payload
 
 # Remove the temporary IP rule
@@ -110,26 +109,30 @@ Write-Output "Removed $currentIp from the whitelist."
 ### Testing EntraID authentication ###
 
 # Call publicly exposed function - should get 401
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
 Call-FunctionApp -apiUrl $apiUrl -payload $payload
 
+# App: SPN-CLIENT-fn-bdAug2025-gwc-dev
 $tenantId = ""  # Your Azure AD Tenant ID
 $clientId = ""  # The Client App Registration ID (FunctionApp-Caller)
 $clientSecret = ""  # Secret from "Certificates & Secrets"
 
 # Login to Azure as the client app
+Disconnect-AzAccount
 $secureSecret = ConvertTo-SecureString $clientSecret -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential($clientId, $secureSecret)
 Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant $tenantId | Out-Null
+#Get-AzContext
 
 # Get the access token
-$functionClientId = ""
+# Disconnect-AzAccount
+$functionClientId = ""  # The Function App Registration ID
 $token = (Get-AzAccessToken -ResourceUrl "api://$($functionClientId)").Token
 
-$apiUrl = "https://fn-bdaug2025-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
