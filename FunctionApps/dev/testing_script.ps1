@@ -1,5 +1,11 @@
-# fn-bdAug2025-gwc-dev: function with Easy Auth
-# fn-bdAug2025-2-gwc-dev: function with Easy Auth
+<#
+fn-bdAug2025-gwc-prd: demo function
+
+fn-bdAug2025-2-gwc-dev: test function
+
+fn-bdAug2025-gwc-dev: function with Easy Auth enabled and no network access restrictions
+allowed client: SPN-CLIENT-fn-bdAug2025-gwc-dev
+#>
 
 # Define a function to call the Function App
 function Call-FunctionApp {
@@ -13,14 +19,14 @@ function Call-FunctionApp {
 }
 
 # Call publicly exposed function
-$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
 Call-FunctionApp -apiUrl $apiUrl -payload $payload
 
 # Call secure function (using function/host key)
-$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/secure_function?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/secure_function?"
 $functionKey = ""
 $payload = @{
     name = "Bartek"
@@ -28,7 +34,7 @@ $payload = @{
 Call-FunctionApp -apiUrl "${apiUrl}code=${functionKey}" -payload $payload
 
 # Call secure function (using function/host key)
-$apiUrl = "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/api/secure_function2?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/secure_function2?"
 $functionKey = ""
 $payload = @{
     name = "Bartek"
@@ -38,17 +44,17 @@ Call-FunctionApp -apiUrl "${apiUrl}code=${functionKey}" -payload $payload
 ### Testing master key ###
 $masterKey = ""
 # Get host status
-Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/host/status" `
+Invoke-RestMethod -Uri "https://fn-bdAug2025-gwc-prd.azurewebsites.net/admin/host/status" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
 # List all functions
-Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/functions" `
+Invoke-RestMethod -Uri "https://fn-bdAug2025-gwc-prd.azurewebsites.net/admin/functions" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
 # List all function keys
-Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/functions/secure_function/keys" `
+Invoke-RestMethod -Uri "https://fn-bdAug2025-gwc-prd.azurewebsites.net/admin/functions/secure_function/keys" `
     -Headers @{ "x-functions-key" = "" } `
     -Method Get
 
@@ -60,9 +66,11 @@ Invoke-RestMethod -Uri "https://fn-bdaug2025-2-gwc-dev.azurewebsites.net/admin/f
 
 
 ### Testing whiteslisting approach ###
+
+# Set network restrictions on the Function App!
 $subscriptionId = ""
-$resourceGroupName = "rg-bdAug2025-2-gwc-dev"
-$functionAppName = "fn-bdAug2025-2-gwc-dev"
+$resourceGroupName = "rg-bdAug2025-gwc-prd"
+$functionAppName = "fn-bdAug2025-gwc-prd"
 
 # Disconnect-AzAccount
 # Connect-AzAccount -TenantId ""
@@ -95,7 +103,7 @@ Set-AzWebApp -WebApp $functionApp
 Write-Output "Added $currentIp to the whitelist."
 
 
-$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
@@ -108,8 +116,10 @@ Write-Output "Removed $currentIp from the whitelist."
 
 ### Testing EntraID authentication ###
 
+# Configure the Function App to use Easy Auth
+
 # Call publicly exposed function - should get 401
-$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
@@ -128,11 +138,10 @@ Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant $tenantId | 
 #Get-AzContext
 
 # Get the access token
-# Disconnect-AzAccount
 $functionClientId = ""  # The Function App Registration ID
 $token = (Get-AzAccessToken -ResourceUrl "api://$($functionClientId)").Token
 
-$apiUrl = "https://fn-bdAug2025-2-gwc-dev.azurewebsites.net/api/public_function?"
+$apiUrl = "https://fn-bdAug2025-gwc-prd.azurewebsites.net/api/public_function?"
 $payload = @{
     name = "Bartek"
 }
