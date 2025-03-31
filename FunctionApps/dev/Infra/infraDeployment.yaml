@@ -4,8 +4,8 @@ pool:
   vmImage: windows-latest
 
 variables:
-  Environment: 'prd' # qa, prd
-  Prefix: 'bdAug2025'
+  Environment: 'dev' # qa, prd
+  Prefix: 'bdAugDemo2025'
   Location: 'germanywestcentral' # westeurope, eastus, polandcentral
   LocationShort: 'gwc' # we, eus, pl
   ServiceConnection: 'scon-HQsandbox'
