@@ -5,8 +5,8 @@ pool:
 
 variables:
   ServiceConnection: 'scon-HQsandbox'
-  FunctionApp: 'fn-bdAug2025-gwc-dev'
-  FunctionPath: '$(Build.SourcesDirectory)/FunctionApps/dev/Code/translateToHex'
+  FunctionApp: 'fn-bdAug2025-2-gwc-dev'
+  FunctionPath: '$(Build.SourcesDirectory)/FunctionApps/dev/Code'
 
 stages:
 - stage: Build_Deploy

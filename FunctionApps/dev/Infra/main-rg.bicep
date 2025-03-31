@@ -28,7 +28,7 @@ param locationShort string
 
 @description('Required - project prefix')
 @minLength(3)
-@maxLength(10)
+@maxLength(15)
 param prefix string
 
 module resourceGroup01 'br/public:avm/res/resources/resource-group:0.4.0' = {
