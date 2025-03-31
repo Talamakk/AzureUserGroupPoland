@@ -1,0 +1,51 @@
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  Environment: 'prd' # qa, prd
+  Prefix: 'bdAug2025'
+  Location: 'germanywestcentral' # westeurope, eastus, polandcentral
+  LocationShort: 'gwc' # we, eus, pl
+  ServiceConnection: 'scon-HQsandbox'
+
+stages:
+  - stage: 'rgDeployment'
+    displayName: 'Resource group deployment'
+    jobs:
+      - job: 'rgDeployment'
+        displayName: 'Resource group deployment'
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy RG bicep file'
+            inputs:
+              deploymentScope: 'Subscription'
+              azureResourceManagerConnection: '$(ServiceConnection)'
+              location: '$(Location)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
+              overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
+              deploymentMode: 'Incremental'
+  - stage: 'resourcesDeployment'
+    displayName: 'Resources deployment'
+    dependsOn: rgDeployment
+    jobs:
+      - job: 'resourcesDeployment'
+        displayName: 'Resources deployment'
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy resources bicep file'
+            inputs:
+              deploymentScope: 'Resource Group'
+              resourceGroupName: 'rg-$(Prefix)-$(LocationShort)-$(Environment)'
+              azureResourceManagerConnection: '$(ServiceConnection)'
+              location: '$(Location)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicepparam'
+              overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
+              deploymentMode: 'Incremental'
