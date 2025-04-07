@@ -1,12 +1,3 @@
-<#
-fn-bdAugDemo2025-gwc-dev: demo function
-
-fn-bdAug2025-2-gwc-dev: test function
-
-fn-bdAug2025-gwc-dev: function with Easy Auth enabled and no network access restrictions
-allowed client: SPN-CLIENT-fn-bdAug2025-gwc-dev
-#>
-
 # Define a function to call the Function App
 function Call-FunctionApp {
     param (
@@ -63,11 +54,10 @@ Invoke-RestMethod -Uri "https://fn-bdAugDemo2025-gwc-dev.azurewebsites.net/admin
 # Delete a function key
 # ...
 #another admin custom-made function
+# ...
 
 
 ### Testing whiteslisting approach ###
-
-# Set network restrictions on the Function App!
 $subscriptionId = ""
 $resourceGroupName = "rg-bdAugDemo2025-gwc-dev"
 $functionAppName = "fn-bdAugDemo2025-gwc-dev"
@@ -113,6 +103,7 @@ Call-FunctionApp -apiUrl $apiUrl -payload $payload
 $functionApp.SiteConfig.IpSecurityRestrictions= $existingIpRestrictions
 Set-AzWebApp -WebApp $functionApp
 Write-Output "Removed $currentIp from the whitelist."
+
 
 ### Testing EntraID authentication ###
 

@@ -25,8 +25,8 @@ stages:
               azureResourceManagerConnection: '$(ServiceConnection)'
               location: '$(Location)'
               templateLocation: 'Linked artifact'
-              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicep'
-              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
+              csmFile: '$(System.DefaultWorkingDirectory)/2025-04-FunctionApps/$(Environment)/Infra/main-rg.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/2025-04-FunctionApps/$(Environment)/Infra/main-rg.bicepparam'
               overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
               deploymentMode: 'Incremental'
   - stage: 'resourcesDeployment'
@@ -45,7 +45,7 @@ stages:
               azureResourceManagerConnection: '$(ServiceConnection)'
               location: '$(Location)'
               templateLocation: 'Linked artifact'
-              csmFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicep'
-              csmParametersFile: '$(System.DefaultWorkingDirectory)/FunctionApps/$(Environment)/Infra/main.bicepparam'
+              csmFile: '$(System.DefaultWorkingDirectory)/2025-04-FunctionApps/$(Environment)/Infra/main.bicep'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/2025-04-FunctionApps/$(Environment)/Infra/main.bicepparam'
               overrideParameters: -environment $(Environment) -location $(Location) -locationShort $(LocationShort) -prefix $(Prefix)
               deploymentMode: 'Incremental'

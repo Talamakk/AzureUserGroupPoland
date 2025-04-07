@@ -6,7 +6,7 @@ pool:
 variables:
   ServiceConnection: 'scon-HQsandbox'
   FunctionApp: 'fn-bdAugDemo2025-gwc-dev'
-  FunctionPath: '$(Build.SourcesDirectory)/FunctionApps/dev/Code'
+  FunctionPath: '$(Build.SourcesDirectory)/2025-04-FunctionApps/dev/Code'
 
 stages:
 - stage: Build_Deploy
